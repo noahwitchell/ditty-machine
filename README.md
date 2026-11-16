@@ -8,3 +8,5 @@ A phone-first piano-roll step sequencer for short musical ditties. One `index.ht
 - Tap/drag the ruler to move or scrub the playhead; loop a bar or section from the strip above it
 
 Live: https://noahwitchell.github.io/ditty-machine/
+
+Add it to your phone's home screen (Safari → Share → Add to Home Screen) for a full-screen app with its own icon.

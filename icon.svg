@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232A3A"/>
+      <stop offset="1" stop-color="#0F1218"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+      <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".22"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- piano-roll lanes -->
+  <g fill="#fff" opacity=".045">
+    <rect x="120" y="232" width="784" height="112" rx="20"/>
+    <rect x="120" y="488" width="784" height="112" rx="20"/>
+    <rect x="120" y="744" width="784" height="112" rx="20"/>
+  </g>
+  <g stroke="#fff" stroke-opacity=".08" stroke-width="6">
+    <path d="M316 176v712M512 176v712"/>
+  </g>
+  <!-- the ditty: four notes climbing -->
+  <rect x="136" y="744" width="300" height="112" rx="36" fill="#FF7058"/>
+  <rect x="452" y="616" width="148" height="112" rx="36" fill="#F0AE3C"/>
+  <rect x="616" y="488" width="148" height="112" rx="36" fill="#3CC488"/>
+  <rect x="616" y="232" width="272" height="112" rx="36" fill="#5B9BFF"/>
+  <g fill="url(#shine)">
+    <rect x="136" y="744" width="300" height="112" rx="36"/>
+    <rect x="452" y="616" width="148" height="112" rx="36"/>
+    <rect x="616" y="488" width="148" height="112" rx="36"/>
+    <rect x="616" y="232" width="272" height="112" rx="36"/>
+  </g>
+  <!-- playhead -->
+  <rect x="682" y="168" width="16" height="716" rx="8" fill="#fff"/>
+  <path d="M650 150h80l-40 46z" fill="#fff"/>
+</svg>

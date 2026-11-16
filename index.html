@@ -3,6 +3,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Ditty">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0F1217">
 <title>Ditty Machine</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +49,7 @@ button{cursor:pointer}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 12px}
 .top-in{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
 .brand{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;margin-right:auto}
+.brand .logo{width:30px;height:30px;flex:none;border-radius:7px;box-shadow:0 0 0 1px var(--line2)}
 .brand .dots{display:grid;grid-template-columns:repeat(4,6px);gap:2px}
 .brand .dots i{width:6px;height:6px;border-radius:1.5px;background:var(--line2)}
 .brand .dots i.on{background:var(--accent)}
@@ -290,7 +295,7 @@ input[type=range]{width:84px;accent-color:var(--accent)}
 </style>
 
 <header class="top"><div class="top-in">
-  <div class="brand"><span class="dots" aria-hidden="true"><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i></span>Ditty Machine</div>
+  <div class="brand"><svg class="logo" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="228" fill="#161B25"/><rect x="136" y="744" width="300" height="112" rx="36" fill="#FF7058"/><rect x="452" y="616" width="148" height="112" rx="36" fill="#F0AE3C"/><rect x="616" y="488" width="148" height="112" rx="36" fill="#3CC488"/><rect x="616" y="232" width="272" height="112" rx="36" fill="#5B9BFF"/><rect x="674" y="168" width="32" height="716" rx="16" fill="#fff"/><path d="M634 140h112l-56 64z" fill="#fff"/></svg>Ditty Machine</div>
   <div class="transport">
     <button id="play" class="play" aria-label="Play (Space)" title="Play / Stop (Space)"></button>
     <div class="bpm">
@@ -385,7 +390,7 @@ input[type=range]{width:84px;accent-color:var(--accent)}
   </section>
 
   <section class="panel songp" id="tabSong">
-    <div class="brand"><span class="dots" aria-hidden="true"><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i></span>Ditty Machine</div>
+    <div class="brand"><svg class="logo" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="228" fill="#161B25"/><rect x="136" y="744" width="300" height="112" rx="36" fill="#FF7058"/><rect x="452" y="616" width="148" height="112" rx="36" fill="#F0AE3C"/><rect x="616" y="488" width="148" height="112" rx="36" fill="#3CC488"/><rect x="616" y="232" width="272" height="112" rx="36" fill="#5B9BFF"/><rect x="674" y="168" width="32" height="716" rx="16" fill="#fff"/><path d="M634 140h112l-56 64z" fill="#fff"/></svg>Ditty Machine</div>
     <div id="songSlot"></div>
   </section>
 </main>

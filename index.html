@@ -76,30 +76,82 @@ button,.field,.ruler,.loopbar,.key{-webkit-tap-highlight-color:transparent;touch
   #trackList .track{flex:0 0 150px;scroll-snap-align:start;background:var(--panel2)}
   #trackList .track.sel{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
 }
-@media (max-width:700px){
-  :root{--keysW:54px}
-  body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
-  .top{position:static;padding-block:10px 8px}
-  .brand{font-size:20px}
-  .top-actions .btn{height:30px;padding:0 9px;font-size:12px}
-  .transport{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--panel);border-top:1px solid var(--line2);flex-wrap:nowrap;justify-content:space-between;gap:8px;
-    padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-  .play{width:52px;height:52px;flex:none}
-  .bpm button{width:26px}
-  .bpm input{width:40px;font-size:16px}
-  .pos{min-width:0;padding:0 8px;font-size:13px}
-  #loopLbl{display:none}
-  .editor{padding:10px;gap:10px}
-  .ed-name input{font-size:19px}
-  .morebtn{display:inline-flex;align-items:center}
-  .editor:not(.open) .collapsible,.editor:not(.open) .ed-more{display:none!important}
-  .editor.open .ed-more{display:flex;flex-wrap:wrap;gap:10px 14px;width:100%}
-  .toolbar{gap:8px 12px;padding-block:8px}
-  .seg button{height:32px;padding:0 8px}
-  .key{padding:0 5px;font-size:11px;white-space:nowrap}
-  .key .mono{display:none}
-  .key.drum{font-size:10.5px}
-  .legend{font-size:12px}
+/* ---- shared bits for the new layout ---- */
+.ed-head{display:flex;align-items:center;gap:10px}
+.ed-chip{display:flex;align-items:baseline;gap:8px;min-width:0;flex:1;border:0;background:none;padding:4px 6px;border-radius:8px;text-align:left}
+.ed-chip:hover{background:var(--panel2)}
+.ed-chip .sw{width:14px;height:14px;border-radius:4px;background:var(--c);flex:none;align-self:center}
+.ed-chip .nm{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ed-chip .ps{font-size:12px;color:var(--muted);white-space:nowrap}
+.ed-chip .chev{color:var(--muted);font-size:11px}
+.ed-undo{display:none;gap:6px}
+.ibtn{width:40px;height:36px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);display:grid;place-items:center;padding:0}
+.ibtn svg{width:17px;height:17px}
+.ibtn:disabled{opacity:.35}
+.settings{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line2);margin-top:4px}
+.field-lbl.stack{justify-content:space-between}
+.settings select{flex:0 1 190px;min-width:0}
+.settings input[type=range]{flex:0 1 150px;width:auto}
+.txt{height:32px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);padding:0 8px;flex:0 1 190px;min-width:0}
+.ms button.g{display:grid;place-items:center}
+.ms button.g svg{width:12px;height:12px}
+#tabSong,.tabbar{display:none}
+#songSlot{display:flex;flex-direction:column;gap:16px}
+/* ---- phone: one screen, three tabs ---- */
+body.phone{--keysW:54px;--tabH:58px;--transH:68px;padding:0;overflow:hidden;height:100%}
+body.phone .top{position:static;padding:0}
+body.phone .top .brand{display:none}
+body.phone .main{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:calc(var(--tabH) + var(--transH) + env(safe-area-inset-bottom,0px));display:block;overflow-y:auto;overscroll-behavior:contain;
+  padding:10px max(12px,env(safe-area-inset-right,0px)) 12px max(12px,env(safe-area-inset-left,0px))}
+body.phone .main > *{display:none}
+body.phone[data-tab="seq"] #tabSeq,body.phone[data-tab="inst"] #tabInst,body.phone[data-tab="song"] #tabSong{display:flex}
+body.phone .panel{border:0;background:none;border-radius:0;padding:0}
+body.phone #tabSeq{flex-direction:column;gap:8px}
+body.phone .ed-undo{display:flex}
+body.phone .ed-chip .nm{font-size:20px}
+body.phone .toolbar{border:0;padding:0;flex-wrap:nowrap;justify-content:space-between;gap:8px}
+body.phone .toolbar .lab{display:none}
+body.phone .seg button{height:34px;padding:0 9px}
+body.phone .pager .btn{height:32px}
+body.phone .roll{flex:none}
+body.phone .key{padding:0 5px;font-size:11px;white-space:nowrap}
+body.phone .key .mono{display:none}
+body.phone .key.drum{font-size:10.5px}
+body.phone #tabInst{flex-direction:column;gap:10px}
+body.phone .tracks .eyebrow{display:block}
+body.phone #trackList{display:flex;flex-direction:column;gap:8px;overflow:visible}
+body.phone #trackList .track{flex:none;width:100%;background:var(--panel2);padding:12px}
+body.phone #trackList .track .nm{font-size:15px}
+body.phone .ms button{width:34px;height:30px;font-size:12px}
+body.phone #addBtn{height:44px;font-size:14px}
+body.phone .addmenu button{height:40px}
+body.phone #tabSong{flex-direction:column;gap:18px}
+body.phone #tabSong .brand{font-size:22px}
+body.phone #songSlot .grp{justify-content:space-between}
+body.phone #songSlot .seg button{height:36px;padding:0 14px}
+body.phone #songSlot .top-actions .btn{height:40px;flex:1 1 40%}
+body.phone #songSlot .legend{flex-direction:column;gap:8px;font-size:13px;padding:12px;border-radius:12px;background:var(--panel2)}
+body.phone .transport{position:fixed;left:0;right:0;bottom:calc(var(--tabH) + env(safe-area-inset-bottom,0px));height:var(--transH);z-index:8;background:var(--panel);border-top:1px solid var(--line2);
+  flex-wrap:nowrap;justify-content:space-between;gap:8px;padding:0 max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px))}
+body.phone .play{width:50px;height:50px;flex:none}
+body.phone .bpm button{width:26px}
+body.phone .bpm input{width:40px;font-size:16px}
+body.phone .pos{min-width:0;padding:0 8px;font-size:13px}
+body.phone #loopLbl{display:none}
+body.phone .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabH) + env(safe-area-inset-bottom,0px));padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  background:var(--panel);border-top:1px solid var(--line);z-index:9}
+.tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted)}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button[aria-selected="true"]{color:var(--accent)}
+@media (max-width:359px){
+  body.phone .ed-chip .ps,body.phone .bpm span,body.phone .ed-chip .chev{display:none}
+  body.phone .seg button{padding:0 6px;font-size:12px}
+  body.phone .transport{gap:6px}
+  body.phone .play{width:46px;height:46px}
+  body.phone .tbtn{min-width:36px;padding:0 8px}
+  body.phone .pos{padding:0 5px;font-size:12px}
+  body.phone .bpm button{width:22px}
+  body.phone .bpm input{width:34px}
 }
 .btn{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);font-size:13px;font-weight:500;white-space:nowrap}
 .btn:hover:not(:disabled){border-color:var(--line3)}
@@ -218,14 +270,14 @@ input[type=range]{width:84px;accent-color:var(--accent)}
     <button id="play" class="play" aria-label="Play (Space)" title="Play / Stop (Space)"></button>
     <div class="bpm">
       <button id="bpmDown" aria-label="Slower">−</button>
-      <label for="bpm"><input id="bpm" type="number" min="40" max="240" step="1"><span>BPM</span></label>
+      <label for="bpm"><input id="bpm" type="number" inputmode="numeric" min="40" max="240" step="1"><span>BPM</span></label>
       <button id="bpmUp" aria-label="Faster">+</button>
     </div>
     <button id="toStart" class="tbtn" title="Back to start (Home)" aria-label="Back to start"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="2" height="10" rx="1" fill="currentColor"/><path d="M14 3v10L5.5 8z" fill="currentColor"/></svg></button>
     <div class="pos mono" id="pos" title="Bar.Beat.Sixteenth">1.1.1</div>
     <button id="loopBtn" class="tbtn" aria-pressed="false" title="Loop the marked section (L)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V6a2 2 0 0 1 2-2h8l-2-2M13 9v1a2 2 0 0 1-2 2H3l2 2"/></svg><span class="mono" id="loopLbl">Loop</span></button>
   </div>
-  <div class="top-actions">
+  <div class="top-actions" id="topActions">
     <button class="btn" id="undo" title="Undo (⌘Z)">Undo</button>
     <button class="btn" id="redo" title="Redo (⇧⌘Z)">Redo</button>
     <button class="btn" id="example">Load example</button>
@@ -233,47 +285,52 @@ input[type=range]{width:84px;accent-color:var(--accent)}
   </div>
 </div></header>
 
-<main class="main">
-  <aside class="panel tracks">
+<main class="main" id="main">
+  <aside class="panel tracks" id="tabInst">
     <div class="eyebrow">Instruments</div>
     <div id="trackList"></div>
     <button class="btn" id="addBtn">+ Add instrument</button>
     <div class="addmenu" id="addMenu" hidden></div>
-  </aside>
-
-  <section class="panel editor">
-    <div class="ed-head">
-      <div class="ed-name" id="edName"><span class="sw"></span><input id="trackName" aria-label="Instrument name"></div>
-      <button class="btn morebtn" id="moreBtn" aria-expanded="false">Sound &amp; options</button>
-      <div class="ed-more">
-      <label class="field-lbl" for="preset">Sound <select id="preset"></select></label>
-      <div class="field-lbl" id="octWrap">Octave
+    <div class="settings" id="trackSettings">
+      <div class="eyebrow" id="setTitle">Sound</div>
+      <label class="field-lbl stack" for="trackName">Name <input id="trackName" class="txt" aria-label="Instrument name"></label>
+      <label class="field-lbl stack" for="preset">Sound <select id="preset"></select></label>
+      <div class="field-lbl stack" id="octWrap">Octave
         <div class="stepper"><button id="octDown" aria-label="Octave down">−</button><span class="mono" id="octVal">4</span><button id="octUp" aria-label="Octave up">+</button></div>
       </div>
-      <label class="field-lbl" for="vol">Vol <input type="range" id="vol" min="0" max="1" step="0.01"></label>
-      <label class="field-lbl" for="rev">Room <input type="range" id="rev" min="0" max="0.8" step="0.01"></label>
+      <label class="field-lbl stack" for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01"></label>
+      <label class="field-lbl stack" for="rev">Room <input type="range" id="rev" min="0" max="0.8" step="0.01"></label>
+      <div class="ed-actions">
+        <button class="btn" id="copyBtn">Copy pattern</button>
+        <button class="btn" id="pasteBtn">Paste pattern</button>
+        <button class="btn" id="dupBtn">Duplicate</button>
+        <button class="btn" id="clearBtn">Clear notes</button>
+        <button class="btn danger" id="delBtn">Delete</button>
       </div>
     </div>
-    <div class="ed-actions collapsible">
-      <button class="btn" id="copyBtn">Copy pattern</button>
-      <button class="btn" id="pasteBtn">Paste pattern</button>
-      <button class="btn" id="dupBtn">Duplicate instrument</button>
-      <button class="btn" id="clearBtn">Clear notes</button>
-      <button class="btn danger" id="delBtn">Delete instrument</button>
+  </aside>
+
+  <section class="panel editor" id="tabSeq">
+    <div class="ed-head">
+      <button class="ed-chip" id="edChip" title="Instrument settings"><span class="sw"></span><span class="nm" id="chipName"></span><span class="ps" id="chipPreset"></span><span class="chev" aria-hidden="true">▾</span></button>
+      <div class="ed-undo">
+        <button class="ibtn" id="undo2" aria-label="Undo"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3L2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H7"/></svg></button>
+        <button class="ibtn" id="redo2" aria-label="Redo"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3l3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H9"/></svg></button>
+      </div>
     </div>
     <div class="toolbar">
       <div class="grp"><span class="lab">Grid</span><div class="seg mono" id="segRes"></div></div>
-      <div class="grp collapsible"><span class="lab">Bars</span><div class="seg mono" id="segBars"></div></div>
+      <div class="grp" id="grpBars"><span class="lab">Bars</span><div class="seg mono" id="segBars"></div></div>
       <div class="grp"><span class="lab">Tool</span><div class="seg" id="segTool"></div></div>
-      <div class="grp collapsible"><span class="lab">Hear</span><div class="seg" id="segListen"></div></div>
-      <label class="chk collapsible" for="ghosts"><input type="checkbox" id="ghosts"> Show other parts</label>
+      <div class="grp" id="grpListen"><span class="lab">Hear</span><div class="seg" id="segListen"></div></div>
+      <label class="chk" for="ghosts" id="ghostsLbl"><input type="checkbox" id="ghosts"> Show other parts</label>
     </div>
     <div class="pager" id="pager" hidden>
       <button class="btn" id="pgPrev" aria-label="Earlier">‹</button>
       <span class="mono" id="pgLbl"></span>
       <button class="btn" id="pgNext" aria-label="Later">›</button>
     </div>
-    <div class="roll">
+    <div class="roll" id="roll">
       <div class="keys" id="keys"></div>
       <div class="scroller" id="scroller">
         <div class="lane" id="lane">
@@ -290,17 +347,28 @@ input[type=range]{width:84px;accent-color:var(--accent)}
         </div>
       </div>
     </div>
-    <p class="legend">
-      <span><b>Click or drag</b> to draw a note</span>
+    <p class="legend" id="legend">
+      <span><b>Tap or drag</b> to draw a note (drag = one long note)</span>
       <span><b>Tap a note</b> to cycle its octave ↑ ↓ (drums: loud / soft)</span>
       <span><b>Drag</b> a note to move it, its <b>right edge</b> to resize</span>
-      <span><b>Right-click or hold</b> to delete</span>
-      <span><b>Click the ruler</b> to move the playhead, <b>drag</b> it to scrub</span>
-      <span><b>Strip above the ruler</b>: click a bar to loop it, drag to mark a section</span>
-      <span><b>Space</b> play · <b>L</b> loop · <b>I / O</b> set loop in / out at the playhead · <b>Home</b> back to start</span>
+      <span><b>Hold</b> a note (or right-click) to delete it</span>
+      <span><b>Ruler</b>: tap to move the playhead, drag to scrub</span>
+      <span><b>Strip above the ruler</b>: tap a bar to loop it, drag to mark a section, double-tap to stop looping</span>
+      <span><b>Keyboard</b>: Space play · L loop · I / O loop in / out · Home back to start</span>
     </p>
   </section>
+
+  <section class="panel songp" id="tabSong">
+    <div class="brand"><span class="dots" aria-hidden="true"><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i></span>Ditty Machine</div>
+    <div id="songSlot"></div>
+  </section>
 </main>
+
+<nav class="tabbar" id="tabbar" aria-label="Sections">
+  <button data-tab="seq" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M3 14.5h18M9 4v16M15 4v16"/></svg>Sequence</button>
+  <button data-tab="inst" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Instruments</button>
+  <button data-tab="song" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Song</button>
+</nav>
 
 <script>
 (() => {
@@ -324,7 +392,8 @@ const DRUMS=['Kick','Snare','Clap','Rim','Closed Hat','Open Hat','Shaker','Low T
 const RES=[4,8,16,32], BARS=[1,2,4,8];
 const COARSE=matchMedia('(pointer:coarse)').matches;
 const MINCOL=COARSE?{4:40,8:30,16:17,32:17}:{4:44,8:30,16:22,32:15};
-const ROWH=30, KEY='ditty-machine-v1';
+let ROWH=30; const KEY='ditty-machine-v1';
+let PHONE=false;
 const $=id=>document.getElementById(id);
 
 /* ---------- state ---------- */
@@ -353,7 +422,7 @@ function blank(){return {bpm:100,bars:2,nextId:2,tracks:[{id:1,name:'Piano',pres
 function load(){
   try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(d&&d.S&&d.S.tracks&&d.S.tracks.length){S=d.S;V=d.V;}}}catch(e){}
   if(!S) S=example();
-  V=Object.assign({res:16,current:S.tracks[0].id,tool:'draw',listen:'all',ghosts:true,cursor:0,loopIn:0,loopOut:32,loopOn:false,loopSet:false},V||{});
+  V=Object.assign({tab:'seq',res:16,current:S.tracks[0].id,tool:'draw',listen:'all',ghosts:true,cursor:0,loopIn:0,loopOut:32,loopOn:false,loopSet:false},V||{});
   if(!S.tracks.some(t=>t.id===V.current)) V.current=S.tracks[0].id;
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify({S,V}))}catch(e){}}
@@ -598,7 +667,7 @@ function renderPlay(){
 }
 function renderTop(){
   renderPlay(); if(document.activeElement!==$('bpm')) $('bpm').value=S.bpm;
-  $('undo').disabled=!undoStack.length; $('redo').disabled=!redoStack.length;
+  $('undo').disabled=$('undo2').disabled=!undoStack.length; $('redo').disabled=$('redo2').disabled=!redoStack.length;
 }
 function renderTracks(){
   const list=$('trackList'); list.innerHTML='';
@@ -607,9 +676,10 @@ function renderTracks(){
     const el=document.createElement('div');
     el.className='track'+(t.id===V.current?' sel':'')+(t.mute?' muted':''); el.style.setProperty('--c',colorVar(t.color));
     el.tabIndex=0; el.setAttribute('role','button'); el.setAttribute('aria-label',`Edit ${t.name}`);
-    el.innerHTML=`<span class="sw"></span><span class="nm"></span><span class="ms"><button class="m${t.mute?' on':''}" title="Mute">M</button><button class="s${t.solo?' on':''}" title="Solo">S</button></span><span class="ps"></span><canvas></canvas>`;
+    el.innerHTML=`<span class="sw"></span><span class="nm"></span><span class="ms"><button class="g" title="Sound settings" aria-label="Sound settings for ${t.name.replace(/"/g,'')}"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h7M13 4h1M2 12h3M9 12h5"/><circle cx="11" cy="4" r="2"/><circle cx="7" cy="12" r="2"/></svg></button><button class="m${t.mute?' on':''}" title="Mute">M</button><button class="s${t.solo?' on':''}" title="Solo">S</button></span><span class="ps"></span><canvas></canvas>`;
     el.querySelector('.nm').textContent=t.name; el.querySelector('.ps').textContent=PRESETS[t.preset].name+(isDrum(t)?'':` · oct ${t.oct}`);
-    el.onclick=e=>{if(e.target.closest('.ms'))return; V.current=t.id; save(); renderAll();};
+    el.onclick=e=>{if(e.target.closest('.ms'))return; V.current=t.id; save(); renderAll(); if(PHONE) setTab('seq');};
+    el.querySelector('.g').onclick=()=>{V.current=t.id; save(); renderAll(); $('trackSettings').scrollIntoView({behavior:'smooth',block:'nearest'}); $('trackSettings').animate?.([{outline:'2px solid var(--accent)'},{outline:'2px solid transparent'}],{duration:900});};
     el.onkeydown=e=>{if(e.key==='Enter'){V.current=t.id; save(); renderAll();}};
     el.querySelector('.m').onclick=()=>mutate(()=>{t.mute=!t.mute;});
     el.querySelector('.s').onclick=()=>mutate(()=>{t.solo=!t.solo;});
@@ -628,7 +698,8 @@ function mini(cv,t,cs){
 }
 function renderEditor(){
   const t=cur();
-  $('edName').style.setProperty('--c',colorVar(t.color));
+  $('edChip').style.setProperty('--c',colorVar(t.color)); $('chipName').textContent=t.name;
+  $('chipPreset').textContent=PRESETS[t.preset].name; $('setTitle').textContent=`Sound · ${t.name}`;
   if(document.activeElement!==$('trackName')) $('trackName').value=t.name;
   const sel=$('preset'); if(!sel.options.length) GROUPS.forEach(gname=>{const og=document.createElement('optgroup'); og.label=gname;
     for(const [k,p] of Object.entries(PRESETS)) if(p.g===gname){const o=document.createElement('option'); o.value=k; o.textContent=p.name; og.appendChild(o);} sel.appendChild(og);});
@@ -650,9 +721,14 @@ function renderToolbar(){
 }
 function renderRoll(){
   const t=cur(), drumT=isDrum(t), tot=total(), st=stepT(), steps=tot/st;
+  if(PHONE&&V.tab==='seq'){ // size the 12 rows so the whole grid fits the screen
+    const top=$('roll').getBoundingClientRect().top, bottom=$('main').getBoundingClientRect().bottom;
+    const h=bottom-top-12-2-26-20; if(h>0){ROWH=clamp(Math.floor(h/12),24,48);}
+  } else ROWH=30;
+  document.documentElement.style.setProperty('--rowH',ROWH+'px');
   const avail=$('scroller').clientWidth||600;
   const perBar=32/st, barFit=avail/perBar; // shrink slightly so a whole bar fits the screen when it nearly does
-  const minCol=barFit>=MINCOL[V.res]*.8?Math.min(MINCOL[V.res],barFit):MINCOL[V.res];
+  const minCol=barFit>=MINCOL[V.res]*.8?(PHONE?barFit:Math.min(MINCOL[V.res],barFit)):MINCOL[V.res]; // phones: one bar fills the width
   G.colW=Math.max(minCol,avail/steps); G.tickW=G.colW/st;
   const W=G.tickW*tot;
   $('lane').style.width=(W>avail+1?W+Math.max(0,avail-pageStep()):W)+'px'; // pad so the last page lines up
@@ -664,7 +740,7 @@ function renderRoll(){
     const p=11-r, blk=!drumT&&BLACK.has(p);
     const k=document.createElement('div'); k.className='key'+(blk?' blk':'')+(drumT?' drum':'');
     k.innerHTML=drumT?`<span class="nn"></span>`:`<span class="nn"></span><span class="mono" style="font-size:10px;opacity:.6">${t.oct}</span>`;
-    k.querySelector('.nn').textContent=drumT?(innerWidth<=700?DRUMS_SHORT:DRUMS)[p]:NOTE_NAMES[p];
+    k.querySelector('.nn').textContent=drumT?(PHONE?DRUMS_SHORT:DRUMS)[p]:NOTE_NAMES[p];
     k.onpointerdown=()=>audition(t,{p,o:0,l:4});
     keys.appendChild(k);
     if(blk){const d=document.createElement('div'); d.className='rowbg blk'; d.style.top=r*ROWH+'px'; rows.appendChild(d);}
@@ -827,7 +903,6 @@ function follow(pos){ // keep the playhead on screen while playing
 }
 sc.addEventListener('scroll',updatePager,{passive:true});
 $('pgPrev').onclick=()=>page(-1); $('pgNext').onclick=()=>page(1);
-$('moreBtn').onclick=()=>{const ed=document.querySelector('.editor'), open=!ed.classList.contains('open'); ed.classList.toggle('open',open); $('moreBtn').setAttribute('aria-expanded',String(open)); $('moreBtn').textContent=open?'Done':'Sound & options';};
 
 /* ---------- controls ---------- */
 $('play').onclick=toggle;
@@ -856,7 +931,7 @@ for(const [k,p] of Object.entries(PRESETS).sort((a,b)=>GROUPS.indexOf(a[1].g)-GR
   const b=document.createElement('button'); b.textContent=p.name; b.onclick=()=>{
   mutate(()=>{const n=S.tracks.filter(t=>t.preset===k).length; const used=new Set(S.tracks.map(t=>t.color)); let c=0; while(used.has(c)&&c<8)c++; if(c>=8)c=S.tracks.length%8;
     const t={id:S.nextId++,name:p.name+(n?` ${n+1}`:''),preset:k,color:c,oct:p.oct||4,vol:.75,rev:p.drum?.08:.22,mute:false,solo:false,notes:[]}; S.tracks.push(t); V.current=t.id;});
-  menu.hidden=true; $('addBtn').textContent='+ Add instrument';
+  menu.hidden=true; $('addBtn').textContent='+ Add instrument'; if(PHONE) setTab('seq');
 }; menu.appendChild(b);}
 $('addBtn').onclick=()=>{menu.hidden=!menu.hidden; $('addBtn').textContent=menu.hidden?'+ Add instrument':'Cancel';};
 let toastT;
@@ -875,6 +950,25 @@ document.addEventListener('keydown',e=>{
 let rT; window.addEventListener('resize',()=>{clearTimeout(rT); rT=setTimeout(()=>{renderRoll(); renderTracks();},80);});
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>renderTracks());}catch(e){}
 
-load(); renderAll();
+/* ---------- phone tabs + layout ---------- */
+const movers=['grpBars','grpListen','ghostsLbl','topActions','legend'].map(id=>{const el=$(id), mk=document.createComment(id); el.parentNode.insertBefore(mk,el); return {el,mk};});
+function setTab(tab){
+  V.tab=tab; save(); document.body.dataset.tab=tab;
+  document.querySelectorAll('#tabbar button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===tab)));
+  $('main').scrollTop=0;
+  if(tab==='seq') renderRoll(); if(tab==='inst') renderTracks();
+}
+function layout(){
+  PHONE=matchMedia('(max-width:700px)').matches;
+  document.body.classList.toggle('phone',PHONE);
+  movers.forEach(({el,mk})=>{ if(PHONE) $('songSlot').appendChild(el); else mk.parentNode.insertBefore(el,mk.nextSibling); });
+  setTab(V.tab||'seq');
+}
+document.querySelectorAll('#tabbar button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('edChip').onclick=()=>{ if(PHONE) setTab('inst'); else $('trackName').focus(); };
+$('undo2').onclick=undo; $('redo2').onclick=redo;
+try{matchMedia('(max-width:700px)').addEventListener('change',()=>{layout(); renderAll();});}catch(e){}
+
+load(); layout(); renderAll();
 })();
 </script>

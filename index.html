@@ -143,6 +143,31 @@ body.phone .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;height:ca
 .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted)}
 .tabbar button svg{width:22px;height:22px}
 .tabbar button[aria-selected="true"]{color:var(--accent)}
+.rothint{margin:0;font-size:12px;color:var(--muted);text-align:center}
+/* ---- phone sideways: controls move to a rail on the left, grid gets the full height ---- */
+body.phone.land{--rail:66px;--rulerH:20px;--loopH:16px}
+body.phone.land .main{top:0;bottom:0;left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:6px max(10px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) 10px}
+body.phone.land #tabSeq{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px}
+body.phone.land .ed-head{flex:1 1 auto;min-width:0}
+body.phone.land .ed-chip .nm{font-size:17px}
+body.phone.land .toolbar{flex:0 0 auto}
+body.phone.land .seg button,body.phone.land .ibtn{height:30px}
+body.phone.land .pager,body.phone.land .roll{flex:0 0 100%}
+body.phone.land .ruler span{font-size:9.5px}
+body.phone.land .transport{left:0;right:auto;top:0;bottom:auto;width:calc(var(--rail) + env(safe-area-inset-left,0px));height:calc(100% - 3 * 44px - env(safe-area-inset-bottom,0px));
+  flex-direction:column;justify-content:center;gap:8px;padding:8px 0 0 env(safe-area-inset-left,0px);border-top:0;border-right:1px solid var(--line2)}
+body.phone.land .play{width:46px;height:46px}
+body.phone.land .bpm{flex-direction:column;height:auto;width:52px;padding:2px 0}
+body.phone.land .bpm button{width:100%;height:20px;font-size:14px}
+body.phone.land .bpm label{flex-direction:column;align-items:center;gap:0}
+body.phone.land .bpm input{width:44px;text-align:center;font-size:15px}
+body.phone.land .bpm span{display:block;font-size:8.5px}
+body.phone.land .tbtn{width:44px;height:34px;min-width:0;padding:0;justify-content:center}
+body.phone.land .pos{width:56px;height:26px;padding:0;font-size:11px}
+body.phone.land .tabbar{left:0;right:auto;top:auto;bottom:0;width:calc(var(--rail) + env(safe-area-inset-left,0px));height:calc(3 * 44px + env(safe-area-inset-bottom,0px));
+  flex-direction:column;padding:0 0 env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);border-top:1px solid var(--line);border-right:1px solid var(--line2)}
+body.phone.land .tabbar button{font-size:0;gap:0}
+@media (max-height:340px){body.phone.land .pos{display:none}}
 @media (max-width:359px){
   body.phone .ed-chip .ps,body.phone .bpm span,body.phone .ed-chip .chev{display:none}
   body.phone .seg button{padding:0 6px;font-size:12px}
@@ -325,6 +350,7 @@ input[type=range]{width:84px;accent-color:var(--accent)}
       <div class="grp" id="grpListen"><span class="lab">Hear</span><div class="seg" id="segListen"></div></div>
       <label class="chk" for="ghosts" id="ghostsLbl"><input type="checkbox" id="ghosts"> Show other parts</label>
     </div>
+    <p class="rothint" id="rotHint" hidden>Turn your phone sideways for bigger steps</p>
     <div class="pager" id="pager" hidden>
       <button class="btn" id="pgPrev" aria-label="Earlier">‹</button>
       <span class="mono" id="pgLbl"></span>
@@ -393,7 +419,7 @@ const RES=[4,8,16,32], BARS=[1,2,4,8];
 const COARSE=matchMedia('(pointer:coarse)').matches;
 const MINCOL=COARSE?{4:40,8:30,16:17,32:17}:{4:44,8:30,16:22,32:15};
 let ROWH=30; const KEY='ditty-machine-v1';
-let PHONE=false;
+let PHONE=false, LAND=false;
 const $=id=>document.getElementById(id);
 
 /* ---------- state ---------- */
@@ -723,13 +749,14 @@ function renderRoll(){
   const t=cur(), drumT=isDrum(t), tot=total(), st=stepT(), steps=tot/st;
   if(PHONE&&V.tab==='seq'){ // size the 12 rows so the whole grid fits the screen
     const top=$('roll').getBoundingClientRect().top, bottom=$('main').getBoundingClientRect().bottom;
-    const h=bottom-top-12-2-26-20; if(h>0){ROWH=clamp(Math.floor(h/12),24,48);}
+    const cs=getComputedStyle(document.body), rh=parseFloat(cs.getPropertyValue('--rulerH'))||26, lh=parseFloat(cs.getPropertyValue('--loopH'))||20;
+    const h=bottom-top-(LAND?6:12)-2-rh-lh; if(h>0){ROWH=clamp(Math.floor(h/12),14,48);}
   } else ROWH=30;
   document.documentElement.style.setProperty('--rowH',ROWH+'px');
   const avail=$('scroller').clientWidth||600;
   const perBar=32/st, barFit=avail/perBar; // shrink slightly so a whole bar fits the screen when it nearly does
   const minCol=barFit>=MINCOL[V.res]*.8?(PHONE?barFit:Math.min(MINCOL[V.res],barFit)):MINCOL[V.res]; // phones: one bar fills the width
-  G.colW=Math.max(minCol,avail/steps); G.tickW=G.colW/st;
+  G.colW=PHONE?Math.max(4,avail/steps):Math.max(minCol,avail/steps); G.tickW=G.colW/st; // phones: whole song in view
   const W=G.tickW*tot;
   $('lane').style.width=(W>avail+1?W+Math.max(0,avail-pageStep()):W)+'px'; // pad so the last page lines up
   const f=$('field'); f.style.setProperty('--colW',G.colW+'px'); f.style.setProperty('--beatW',G.tickW*8+'px'); f.style.setProperty('--barW',G.tickW*32+'px');
@@ -890,6 +917,7 @@ $('toStart').onclick=toStart;
 const sc=$('scroller');
 function pageStep(){const bw=G.tickW*8; let n=Math.max(1,Math.floor((sc.clientWidth+1)/bw)); if(n>=4) n=Math.floor(n/4)*4; return n*bw;}
 function updatePager(){
+  $('rotHint').hidden=!(PHONE&&!LAND&&G.colW<13);
   const over=sc.scrollWidth>sc.clientWidth+2; $('pager').hidden=!over; if(!over) return;
   const a=Math.round(sc.scrollLeft/G.tickW), b=Math.min(total(),Math.round((sc.scrollLeft+sc.clientWidth)/G.tickW));
   const whole=a%32===0&&b-a>=32, f=a/32+1, l=Math.floor(b/32);
@@ -947,7 +975,7 @@ document.addEventListener('keydown',e=>{
   if(k==='o'){const out=clamp(Math.max(cb,V.loopIn+8),8,total()); setLoop(Math.min(V.loopIn,out-8),out);}
   if(e.key==='Home'){e.preventDefault(); toStart();}
 });
-let rT; window.addEventListener('resize',()=>{clearTimeout(rT); rT=setTimeout(()=>{renderRoll(); renderTracks();},80);});
+let rT; window.addEventListener('resize',()=>{clearTimeout(rT); rT=setTimeout(()=>{if(typeof layout==='function') layout(); renderAll();},80);});
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>renderTracks());}catch(e){}
 
 /* ---------- phone tabs + layout ---------- */
@@ -959,15 +987,17 @@ function setTab(tab){
   if(tab==='seq') renderRoll(); if(tab==='inst') renderTracks();
 }
 function layout(){
-  PHONE=matchMedia('(max-width:700px)').matches;
-  document.body.classList.toggle('phone',PHONE);
+  const force=/[?&]phone\b/.test(location.search); // test hook
+  PHONE=force||matchMedia('(max-width:700px), (pointer:coarse) and (max-height:500px)').matches;
+  LAND=PHONE&&innerWidth>innerHeight;
+  document.body.classList.toggle('phone',PHONE); document.body.classList.toggle('land',LAND);
   movers.forEach(({el,mk})=>{ if(PHONE) $('songSlot').appendChild(el); else mk.parentNode.insertBefore(el,mk.nextSibling); });
   setTab(V.tab||'seq');
 }
 document.querySelectorAll('#tabbar button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 $('edChip').onclick=()=>{ if(PHONE) setTab('inst'); else $('trackName').focus(); };
 $('undo2').onclick=undo; $('redo2').onclick=redo;
-try{matchMedia('(max-width:700px)').addEventListener('change',()=>{layout(); renderAll();});}catch(e){}
+
 
 load(); layout(); renderAll();
 })();
